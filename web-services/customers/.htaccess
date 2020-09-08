@@ -1,0 +1,12 @@
+# Turn on the mod_rewrite plugin
+RewriteEngine on
+
+#If the file being requested exists, then do not redirect:
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#If the directory being requested exists, then do not redirect:
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#Redirect all requests for this folder (and children)
+#to index.php and pass the requested resource in the query string
+RewriteRule ^(.*)$ index.php?url_path=$1 [L,QSA]

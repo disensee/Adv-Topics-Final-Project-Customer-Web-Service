@@ -1,0 +1,19 @@
+.validation{
+    color: red;
+}
+
+.card{
+    border: none;
+}
+
+#header{
+    height: 75px;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+#footer{
+    height: 35px;
+    border-radius: 5px;
+}
