@@ -56,112 +56,95 @@ namespace.CustomerModule = function(options){
 	initialize();
 
 	function initialize(){
-		//make sure user is authenticated
-		var authenticated;
-		var cookies = document.cookie.split(";");
-		for(var i = 0; i<cookies.length; i++){
-			var name = cookies[i].split("=")[0].trim() || null;
-			var value = cookies[i].split("=")[1] || null;
+		// make sure the container is empty
+		listContainer.innerHTML = "";
+		editContainer.innerHTML = "";
+		
+		var editContainerTemplate = `
+			<div id="form-container" class=container-fluid>
+			<h4>Add/Edit Customer</h4>
+				<form id="customer-form">
+						<input type="hidden" id="txtCustomerId" readonly="true"><br>
+					<div class="form-group">
+						<label for="txtFirstName">First Name</label>
+						<input type="text" class="form-control" id="txtFirstName" placeholder="Enter first name" />
+						<span class = "validation vFirstName"></span>
+					</div>
+					<div class="form-group">
+						<label for="txtLastName">Last Name</label>
+						<input type="text" class="form-control" id="txtLastName" placeholder="Enter last name" />
+						<span class = "validation vLastName"></span>
+					</div>
+					<div class="form-group">
+						<label for="txtAddress">Address</label>
+						<input type="text" class="form-control" id="txtAddress" placeholder="Enter address"/>
+						<span class = "validation vAddress"></span>
+					</div>
+					<div class="form-group">
+						<label for="txtCity">City</label>
+						<input type="text" class="form-control" id="txtCity" placeholder="Enter city"/>
+						<span class = "validation vCity"></span>
+					</div>
+					<div class="form-group">
+						<label for="txtState">State</label>
+						<input type="text" class="form-control" id="txtState" placeholder="Enter state"/>
+						<span class = "validation vState"></span>
+					</div>
+					<div class="form-group">
+						<label for="txtZip">Zip Code</label>
+						<input type="text" class="form-control" id="txtZip" placeholder="Enter zip code"/>
+						<span class = "validation vZip"></span>
+					</div>
+					<div class="form-group">
+						<label for="txtEmail">Email Address</label>
+						<input type="text" class="form-control" id="txtEmail" placeholder="Enter email address"/>
+						<span class = "validation vEmail"></span>
+					</div>
+					<div class="text-center">
+						<input type="button" class="btn btn-outline-success" value="Save" id="btnSave">
+						<input type="button" class="btn btn-outline-info" value="Clear" id="btnClear">
+						<input type="button" class="btn btn-outline-danger" value="DELETE" id="btnDelete">
+					</div>
+						<br>
+						<!--<input type="button" class="btn btn-outline-primary" value="Get All Customers" id="btnGetAll" />-->
+				</form>
+			</div>
+		`;
+		
+		header = document.querySelector("#header");
+		header.innerHTML = `<h2 class="float-left">Customers</h2> <h6 class="float-right"><a class="text-light" href="index.php">Log out</a></h6>`;
 
-			if(name == "authenticated" && value == "yes"){
-				authenticated = true;
-				break;
-			}
-		}
+		editContainer.innerHTML = editContainerTemplate;
+		
+		txtCustomerId = editContainer.querySelector("#txtCustomerId");
+		txtFirstName = editContainer.querySelector("#txtFirstName");
+		txtLastName = editContainer.querySelector("#txtLastName");
+		txtAddress = editContainer.querySelector("#txtAddress");
+		txtCity = editContainer.querySelector("#txtCity");
+		txtState = editContainer.querySelector("#txtState");
+		txtZip = editContainer.querySelector("#txtZip");
+		txtEmail = editContainer.querySelector("#txtEmail");
 
-		if(authenticated){
-			// make sure the container is empty
-			listContainer.innerHTML = "";
-			editContainer.innerHTML = "";
-			
-			var editContainerTemplate = `
-				<div id="form-container" class=container-fluid>
-				<h4>Add/Edit Customer</h4>
-					<form id="customer-form">
-							<input type="hidden" id="txtCustomerId" readonly="true"><br>
-						<div class="form-group">
-							<label for="txtFirstName">First Name</label>
-							<input type="text" class="form-control" id="txtFirstName" placeholder="Enter first name" />
-							<span class = "validation vFirstName"></span>
-						</div>
-						<div class="form-group">
-							<label for="txtLastName">Last Name</label>
-							<input type="text" class="form-control" id="txtLastName" placeholder="Enter last name" />
-							<span class = "validation vLastName"></span>
-						</div>
-						<div class="form-group">
-							<label for="txtAddress">Address</label>
-							<input type="text" class="form-control" id="txtAddress" placeholder="Enter address"/>
-							<span class = "validation vAddress"></span>
-						</div>
-						<div class="form-group">
-							<label for="txtCity">City</label>
-							<input type="text" class="form-control" id="txtCity" placeholder="Enter city"/>
-							<span class = "validation vCity"></span>
-						</div>
-						<div class="form-group">
-							<label for="txtState">State</label>
-							<input type="text" class="form-control" id="txtState" placeholder="Enter state"/>
-							<span class = "validation vState"></span>
-						</div>
-						<div class="form-group">
-							<label for="txtZip">Zip Code</label>
-							<input type="text" class="form-control" id="txtZip" placeholder="Enter zip code"/>
-							<span class = "validation vZip"></span>
-						</div>
-						<div class="form-group">
-							<label for="txtEmail">Email Address</label>
-							<input type="text" class="form-control" id="txtEmail" placeholder="Enter email address"/>
-							<span class = "validation vEmail"></span>
-						</div>
-						<div class="text-center">
-							<input type="button" class="btn btn-outline-success" value="Save" id="btnSave">
-							<input type="button" class="btn btn-outline-info" value="Clear" id="btnClear">
-							<input type="button" class="btn btn-outline-danger" value="DELETE" id="btnDelete">
-						</div>
-							<br>
-							<!--<input type="button" class="btn btn-outline-primary" value="Get All Customers" id="btnGetAll" />-->
-					</form>
-				</div>
-			`;
-			
-			header = document.querySelector("#header");
-			header.innerHTML = `<h2 class="float-left">Customers</h2> <h6 class="float-right"><a class="text-light" href="index.php">Log out</a></h6>`;
+		vFirstName = editContainer.querySelector(".vFirstName");
+		vLastName = editContainer.querySelector(".vLastName");
+		vAddress = editContainer.querySelector(".vAddress");
+		vCity = editContainer.querySelector(".vCity");
+		vState = editContainer.querySelector(".vState");
+		vZip = editContainer.querySelector(".vZip");
+		vEmail = editContainer.querySelector(".vEmail");
 
-			editContainer.innerHTML = editContainerTemplate;
-			
-			txtCustomerId = editContainer.querySelector("#txtCustomerId");
-			txtFirstName = editContainer.querySelector("#txtFirstName");
-			txtLastName = editContainer.querySelector("#txtLastName");
-			txtAddress = editContainer.querySelector("#txtAddress");
-			txtCity = editContainer.querySelector("#txtCity");
-			txtState = editContainer.querySelector("#txtState");
-			txtZip = editContainer.querySelector("#txtZip");
-			txtEmail = editContainer.querySelector("#txtEmail");
+		btnSave = editContainer.querySelector("#btnSave");
+		btnSave.addEventListener("click", saveCustomer);
 
-			vFirstName = editContainer.querySelector(".vFirstName");
-			vLastName = editContainer.querySelector(".vLastName");
-			vAddress = editContainer.querySelector(".vAddress");
-			vCity = editContainer.querySelector(".vCity");
-			vState = editContainer.querySelector(".vState");
-			vZip = editContainer.querySelector(".vZip");
-			vEmail = editContainer.querySelector(".vEmail");
+		btnClear = editContainer.querySelector("#btnClear");
+		btnClear.addEventListener("click", clearForm);
 
-			btnSave = editContainer.querySelector("#btnSave");
-			btnSave.addEventListener("click", saveCustomer);
+		btnDelete = editContainer.querySelector("#btnDelete");
+		btnDelete.addEventListener("click", deleteCustomer);
 
-			btnClear = editContainer.querySelector("#btnClear");
-			btnClear.addEventListener("click", clearForm);
+		listContainer.addEventListener("click", getById);
 
-			btnDelete = editContainer.querySelector("#btnDelete");
-			btnDelete.addEventListener("click", deleteCustomer);
-
-			listContainer.addEventListener("click", getById);
-
-			getAllCustomers();
-		}else{
-			window.location.replace("/adv-topics/final-project/index.php");
-		}
+		getAllCustomers();
 	}
 
 	function getAllCustomers(){
